@@ -1,4 +1,5 @@
 ﻿using DevTrackR.Tracking.Core.Repositories;
+using DevTrackR.Tracking.Infrastructure.Messaging;
 using DevTrackR.Tracking.Infrastructure.Persistence;
 using DevTrackR.Tracking.Infrastructure.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +14,8 @@ namespace DevTrackR.Tracking.Infrastructure
         {
             return services
                 .AddMongo()
-                .AddRepositories();
+                .AddRepositories()
+                .AddMessageBus();
         }
 
         public static IServiceCollection AddMongo(this IServiceCollection services)
@@ -60,9 +62,10 @@ namespace DevTrackR.Tracking.Infrastructure
             return services;
         }
 
-        /*private static IServiceCollection AddMessageBus(this IServiceCollection services)
+        private static IServiceCollection AddMessageBus(this IServiceCollection services)
         {
-
-        }*/
+            services.AddScoped<IMessageBusService, RabbitMqService>();
+            return services;
+        }
     }
 }
