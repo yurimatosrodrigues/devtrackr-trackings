@@ -1,18 +1,30 @@
 ﻿using DevTrackR.Tracking.Application.Models.InputModels;
 using DevTrackR.Tracking.Application.Models.ViewModels;
+using DevTrackR.Tracking.Core.Repositories;
 
 namespace DevTrackR.Tracking.Application.Services
 {
     public class ShippingOrderUpdateService : IShippingOrderUpdateService
     {
-        public Task AddUpdate(AddShippingOrderUpdateInputModel model)
+        private readonly IShippingOrderUpdateRepository _repository;
+        public ShippingOrderUpdateService(IShippingOrderUpdateRepository repository)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+        }
+        public async Task AddUpdate(AddShippingOrderUpdateInputModel model)
+        {
+            var shippingOrderUpdate = model.ToEntity();
+            await _repository.AddAsync(shippingOrderUpdate);
         }
 
-        public Task<List<ShippingOrderUpdateViewModel>> GetAllByCode(string code)
+        public async Task<List<ShippingOrderUpdateViewModel>> GetAllByCode(string code)
         {
-            throw new NotImplementedException();
+            var shippingOrderUpdates = await _repository.GetAllByCodeAsync(code);
+
+            var viewModels = shippingOrderUpdates.Select(
+                x => new ShippingOrderUpdateViewModel(x)).ToList();
+
+            return viewModels;
         }
     }
 }
