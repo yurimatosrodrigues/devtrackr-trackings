@@ -1,4 +1,7 @@
-﻿namespace DevTrackR.Tracking.Core.Entities
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace DevTrackR.Tracking.Core.Entities
 {
     public class ShippingOrderUpdate
     {
@@ -12,6 +15,8 @@
 
             UpdatedAt = DateTime.Now;
         }
+        [BsonId]
+        [BsonGuidRepresentation(GuidRepresentation.Standard)]
         public Guid Id { get; private set; }
         public string TrackingCode { get; private set; }
         public string Description { get; private set; }
