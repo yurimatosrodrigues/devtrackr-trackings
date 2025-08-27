@@ -1,18 +1,26 @@
 ﻿using DevTrackR.Tracking.Core.Entities;
 using DevTrackR.Tracking.Core.Repositories;
+using MongoDB.Driver;
 
 namespace DevTrackR.Tracking.Infrastructure.Persistence.Repositories
 {
     public class ShippingOrderUpdateRepository : IShippingOrderUpdateRepository
     {
-        public Task AddAsync(ShippingOrderUpdate update)
+        private readonly IMongoCollection<ShippingOrderUpdate> _collection;
+
+        public ShippingOrderUpdateRepository(IMongoDatabase database)
         {
-            throw new NotImplementedException();
+            _collection = database.GetCollection<ShippingOrderUpdate>("shipping-order-updates");
         }
 
-        public Task<List<ShippingOrderUpdate>> GetAllByCodeAsync(string shippingOrderCode)
+        public async Task AddAsync(ShippingOrderUpdate update)
         {
-            throw new NotImplementedException();
+            await _collection.InsertOneAsync(update);
+        }
+
+        public async Task<List<ShippingOrderUpdate>> GetAllByCodeAsync(string shippingOrderCode)
+        {
+            return await _collection.Find(x => x.TrackingCode == shippingOrderCode).ToListAsync();
         }
     }
 }
